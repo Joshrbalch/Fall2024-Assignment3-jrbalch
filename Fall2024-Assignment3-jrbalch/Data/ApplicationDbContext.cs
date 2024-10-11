@@ -12,5 +12,6 @@ namespace Fall2024_Assignment3_jrbalch.Data
         }
         public DbSet<Fall2024_Assignment3_jrbalch.Models.Movie> Movie { get; set; } = default!;
         public DbSet<Fall2024_Assignment3_jrbalch.Models.Actor> Actor { get; set; } = default!;
+        public DbSet<Fall2024_Assignment3_jrbalch.Models.ActorMovie> ActorMovie { get; set; } = default!;
     }
 }
