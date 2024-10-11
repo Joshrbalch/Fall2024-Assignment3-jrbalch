@@ -6,7 +6,7 @@
         public string? Name { get; set; }
         public string? Gender { get; set; }
         public int? Age { get; set; }
-        public int? IMDBLink { get; set; }
+        public string? IMDBLink { get; set; }
         public byte? Photo { get; set; }
     }
 }
