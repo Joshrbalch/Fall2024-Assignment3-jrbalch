@@ -40,7 +40,15 @@ namespace Fall2024_Assignment3_jrbalch.Controllers
                 return NotFound();
             }
 
-            return View(actor);
+            var movies = await _context.ActorMovie
+                .Include(cs => cs.Movie)
+                .Where(cs => cs.ActorId == actor.Id)
+                .Select(cs => cs.Movie)
+                .ToListAsync();
+
+            var vm = new ActorMoviesViewModel(actor, movies);
+
+            return View(vm);
         }
 
         // GET: Actors/Create
