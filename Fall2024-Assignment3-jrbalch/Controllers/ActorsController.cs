@@ -56,14 +56,33 @@ namespace Fall2024_Assignment3_jrbalch.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name,Gender,Age,IMDBLink,Photo")] Actor actor)
         {
+            var photo = Request.Form.Files["Photo"];
+
             if (ModelState.IsValid)
             {
+                if (photo != null && photo.Length > 0)
+                {
+                    using var memoryStream = new MemoryStream(); // Dispose() for garbage collection 
+                    await photo.CopyToAsync(memoryStream);
+                    actor.Photo = memoryStream.ToArray();
+                }
                 _context.Add(actor);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             return View(actor);
         }
+
+        public IActionResult GetImage(int id)
+        {
+            var actor = _context.Actor.Find(id);
+            if (actor == null || actor.Photo == null)
+            {
+                return NotFound(); // Or return a default image
+            }
+            return File(actor.Photo, "image/jpeg"); // Assuming JPEG, adjust MIME type if necessary
+        }
+
 
         // GET: Actors/Edit/5
         public async Task<IActionResult> Edit(int? id)

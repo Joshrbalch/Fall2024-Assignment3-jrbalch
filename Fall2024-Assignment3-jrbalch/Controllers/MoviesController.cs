@@ -56,13 +56,30 @@ namespace Fall2024_Assignment3_jrbalch.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("ID,Title,Genre,Year,Director,Actors,Poster")] Movie movie)
         {
+            var poster = Request.Form.Files["Poster"];
             if (ModelState.IsValid)
             {
+                if (poster != null && poster.Length > 0)
+                {
+                    using var memoryStream = new MemoryStream(); // Dispose() for garbage collection 
+                    await poster.CopyToAsync(memoryStream);
+                    movie.Poster = memoryStream.ToArray();
+                }
                 _context.Add(movie);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             return View(movie);
+        }
+
+        public IActionResult GetImage(int id)
+        {
+            var movie = _context.Movie.Find(id);
+            if (movie == null || movie.Poster == null)
+            {
+                return NotFound(); // Or return a default image
+            }
+            return File(movie.Poster, "image/jpeg"); // Assuming JPEG, adjust MIME type if necessary
         }
 
         // GET: Movies/Edit/5
@@ -86,7 +103,7 @@ namespace Fall2024_Assignment3_jrbalch.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ID,Title,Genre,Year,Director,Actors,Poster")] Movie movie)
+        public async Task<IActionResult> Edit(int id, [Bind("ID,Title,IMDBLink,Genre,Year,Actors,Poster")] Movie movie)
         {
             if (id != movie.ID)
             {

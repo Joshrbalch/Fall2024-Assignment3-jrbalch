@@ -7,6 +7,6 @@
         public string? Gender { get; set; }
         public int? Age { get; set; }
         public string? IMDBLink { get; set; }
-        public byte? Photo { get; set; }
+        public byte[]? Photo { get; set; }
     }
 }
