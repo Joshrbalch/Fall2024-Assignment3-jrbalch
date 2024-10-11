@@ -22,6 +22,10 @@ namespace Fall2024_Assignment3_jrbalch.Controllers
         {
             return View();
         }
+        public IActionResult Movie()
+        {
+            return View();
+        }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

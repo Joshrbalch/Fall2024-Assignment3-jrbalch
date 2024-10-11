@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Data.Entity;
 
 namespace Fall2024_Assignment3_jrbalch.Models
 {
@@ -10,5 +11,10 @@ namespace Fall2024_Assignment3_jrbalch.Models
         public string? IMDBLink { get; set; }
         public int? releaseYear { get; set; }
         public BitArray? Poster { get; set; }
+    }
+
+    public class MovieDBContext : DbContext
+    {
+        public DbSet<Movie>? Movies { get; set; }
     }
 }
