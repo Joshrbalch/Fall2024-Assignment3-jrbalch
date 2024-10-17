@@ -7,12 +7,16 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Fall2024_Assignment3_jrbalch.Data;
 using Fall2024_Assignment3_jrbalch.Models;
+using static Fall2024_Assignment3_jrbalch.Services.OpenAIService
+
+using Fall2024_Assignment3_jrbalch.Services;
 
 namespace Fall2024_Assignment3_jrbalch.Controllers
 {
     public class MoviesController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly OpenAIService _openAIService;
 
         public MoviesController(ApplicationDbContext context)
         {
@@ -40,7 +44,12 @@ namespace Fall2024_Assignment3_jrbalch.Controllers
                 return NotFound();
             }
 
-            return View(movie);
+            List<string> reviews = new List<string>();
+            reviews = await _openAIService.GenerateReviewsAsync("Kung Fu Panda 2");
+
+            MovieReviewViewModel vm = new MovieReviewViewModel(movie, reviews);
+
+            return View(vm);
         }
 
         // GET: Movies/Create

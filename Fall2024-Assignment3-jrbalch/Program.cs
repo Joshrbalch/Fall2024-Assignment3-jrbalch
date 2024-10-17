@@ -1,8 +1,21 @@
 using Fall2024_Assignment3_jrbalch.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Azure.AI.OpenAI;
+using Microsoft.Build.Framework;
+using OpenAI.Chat;
+using NuGet.ProjectModel;
+using Fall2024_Assignment3_jrbalch.Services;
+using static Fall2024_Assignment3_jrbalch.Services.OpenAIService;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddScoped<OpenAIService>();
+
+var openAIEndpoint = builder.Configuration["OpenAIEndpoint"];
+var openAIKey = builder.Configuration["OpenAIKey"];
+
+OpenAIService openAIService = new OpenAIService(builder.Configuration);
 
 // Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
