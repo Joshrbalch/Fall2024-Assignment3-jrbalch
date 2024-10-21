@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Fall2024_Assignment3_jrbalch.Data;
 using Fall2024_Assignment3_jrbalch.Models;
 using static Fall2024_Assignment3_jrbalch.Services.OpenAIService;
+using VaderSharp2;
 
 using Fall2024_Assignment3_jrbalch.Services;
 using Fall2024_Assignment3_jrbalch.Data.Migrations;
@@ -52,13 +53,50 @@ namespace Fall2024_Assignment3_jrbalch.Controllers
                 .Select(cs => cs.Actor)
                 .ToListAsync();
 
-            List<string> reviews = new List<string>();
-            reviews = await _openAIService.GenerateMovieReviewsAsync(movie.Title);
+            List<string> reviews = await _openAIService.GenerateMovieReviewsAsync(movie.Title);
 
-            MovieDetailsViewModel vm = new MovieDetailsViewModel(movie, reviews, actors);
+            SentimentIntensityAnalyzer analyzer = new SentimentIntensityAnalyzer();
+
+            List<MovieReviewsViewModel> reviewViewModels = new List<MovieReviewsViewModel>();
+
+            int positiveCount = 0;
+            int negativeCount = 0;
+
+            foreach (var review in reviews)
+            {
+                var sentimentResult = analyzer.PolarityScores(review);
+                string sentiment;
+
+                if (sentimentResult.Compound >= 0.05)
+                {
+                    sentiment = "Positive";
+                    positiveCount++;
+                }
+                else if (sentimentResult.Compound <= -0.05)
+                {
+                    sentiment = "Negative";
+                    negativeCount++;
+                }
+                else
+                {
+                    sentiment = "Neutral";
+                }
+
+                reviewViewModels.Add(new MovieReviewsViewModel
+                {
+                    Review = review,
+                    Sentiment = sentiment
+                });
+            }
+
+            // Calculate overall sentiment
+            string overallSentiment = positiveCount > negativeCount ? "Positive" : "Negative";
+
+            MovieDetailsViewModel vm = new MovieDetailsViewModel(movie, reviewViewModels, actors, overallSentiment);
 
             return View(vm);
         }
+
 
         // GET: Movies/Create
         public IActionResult Create()

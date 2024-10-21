@@ -83,28 +83,26 @@
     </table>
 </div>
 
-<!-- Reviews Section -->
-@if (Model.reviews != null && Model.reviews.Count > 0)
-{
-    <div>
-        <h4>Reviews</h4>
-        <hr />
-        <ul>
-            @for (int i = 0; i < Math.Min(20, Model.reviews.Count); i++)
-            {
-                <li>
-                    <strong>@Model.reviews[i]:</strong> <br />
-                </li>
-            }
-        </ul>
-    </div>
-}
-else
-{
-    <div>
-        <p>No reviews available for this movie.</p>
-    </div>
-}
+<h2>Reviews and Sentiment Analysis</h2>
+<h3>Overall Sentiment: @Model.OverallSentiment</h3>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Review</th>
+            <th>Sentiment</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var review in Model.reviews)
+        {
+            <tr>
+                <td>@review.Review</td>
+                <td>@review.Sentiment</td>
+            </tr>
+        }
+    </tbody>
+</table>
 
 <div>
     <a asp-action="Edit" asp-route-id="@Model?.movie.ID">Edit</a> |
