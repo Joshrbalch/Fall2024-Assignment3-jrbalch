@@ -49,14 +49,13 @@ namespace Fall2024_Assignment3_jrbalch.Controllers
         // GET: ActorMovies/Create
         public IActionResult Create()
         {
-            ViewData["ActorId"] = new SelectList(_context.Actor, "Id", "Id");
-            ViewData["MovieId"] = new SelectList(_context.Movie, "ID", "ID");
+            // Populate ViewData with actor names and movie titles
+            ViewData["ActorId"] = new SelectList(_context.Actor, "Id", "Name");
+            ViewData["MovieId"] = new SelectList(_context.Movie, "ID", "Title");
             return View();
         }
 
         // POST: ActorMovies/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,ActorId,MovieId")] ActorMovie actorMovie)
@@ -67,8 +66,11 @@ namespace Fall2024_Assignment3_jrbalch.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ActorId"] = new SelectList(_context.Actor, "Id", "Id", actorMovie.ActorId);
-            ViewData["MovieId"] = new SelectList(_context.Movie, "ID", "ID", actorMovie.MovieId);
+
+            // Repopulate actor and movie lists in case of an error
+            ViewData["ActorId"] = new SelectList(_context.Actor, "Id", "Name", actorMovie.ActorId);
+            ViewData["MovieId"] = new SelectList(_context.Movie, "ID", "Title", actorMovie.MovieId);
+
             return View(actorMovie);
         }
 
@@ -85,14 +87,15 @@ namespace Fall2024_Assignment3_jrbalch.Controllers
             {
                 return NotFound();
             }
-            ViewData["ActorId"] = new SelectList(_context.Actor, "Id", "Id", actorMovie.ActorId);
-            ViewData["MovieId"] = new SelectList(_context.Movie, "ID", "ID", actorMovie.MovieId);
+
+            // Populate ViewData with actor names and movie titles
+            ViewData["ActorId"] = new SelectList(_context.Actor, "Id", "Name", actorMovie.ActorId);
+            ViewData["MovieId"] = new SelectList(_context.Movie, "ID", "Title", actorMovie.MovieId);
+
             return View(actorMovie);
         }
 
         // POST: ActorMovies/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,ActorId,MovieId")] ActorMovie actorMovie)
@@ -122,8 +125,11 @@ namespace Fall2024_Assignment3_jrbalch.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ActorId"] = new SelectList(_context.Actor, "Id", "Id", actorMovie.ActorId);
-            ViewData["MovieId"] = new SelectList(_context.Movie, "ID", "ID", actorMovie.MovieId);
+
+            // Repopulate actor and movie lists in case of an error
+            ViewData["ActorId"] = new SelectList(_context.Actor, "Id", "Name", actorMovie.ActorId);
+            ViewData["MovieId"] = new SelectList(_context.Movie, "ID", "Title", actorMovie.MovieId);
+
             return View(actorMovie);
         }
 

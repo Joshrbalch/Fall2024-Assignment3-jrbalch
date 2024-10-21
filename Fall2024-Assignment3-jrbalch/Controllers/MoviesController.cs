@@ -7,9 +7,10 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Fall2024_Assignment3_jrbalch.Data;
 using Fall2024_Assignment3_jrbalch.Models;
-using static Fall2024_Assignment3_jrbalch.Services.OpenAIService
+using static Fall2024_Assignment3_jrbalch.Services.OpenAIService;
 
 using Fall2024_Assignment3_jrbalch.Services;
+using Fall2024_Assignment3_jrbalch.Data.Migrations;
 
 namespace Fall2024_Assignment3_jrbalch.Controllers
 {
@@ -18,8 +19,9 @@ namespace Fall2024_Assignment3_jrbalch.Controllers
         private readonly ApplicationDbContext _context;
         private readonly OpenAIService _openAIService;
 
-        public MoviesController(ApplicationDbContext context)
+        public MoviesController(ApplicationDbContext context, OpenAIService openAIService)
         {
+            _openAIService = openAIService;
             _context = context;
         }
 
@@ -44,10 +46,16 @@ namespace Fall2024_Assignment3_jrbalch.Controllers
                 return NotFound();
             }
 
-            List<string> reviews = new List<string>();
-            reviews = await _openAIService.GenerateReviewsAsync("Kung Fu Panda 2");
+            var actors = await _context.ActorMovie
+                .Include(cs => cs.Actor)
+                .Where(cs => cs.MovieId == movie.ID)
+                .Select(cs => cs.Actor)
+                .ToListAsync();
 
-            MovieReviewViewModel vm = new MovieReviewViewModel(movie, reviews);
+            List<string> reviews = new List<string>();
+            reviews = await _openAIService.GenerateMovieReviewsAsync(movie.Title);
+
+            MovieDetailsViewModel vm = new MovieDetailsViewModel(movie, reviews, actors);
 
             return View(vm);
         }

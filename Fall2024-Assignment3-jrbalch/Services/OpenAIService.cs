@@ -42,7 +42,7 @@ namespace Fall2024_Assignment3_jrbalch.Services
             _chatClient = chatClient;
         }
 
-        public async Task<List<string>> GenerateReviewsAsync(string reviewee) {
+        public async Task<List<string>> GenerateMovieReviewsAsync(string reviewee) {
 
             var messages = new List<ChatMessage>
             {
@@ -74,6 +74,53 @@ namespace Fall2024_Assignment3_jrbalch.Services
 
                     // Add each split review to the reviews list
                     for(int i = 0; i < reviewArray.Length; i++)
+                    {
+                        reviews.Add(reviewArray[i].Trim());  // Trim any extra whitespace
+                    }
+
+                    return reviews;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+            return null;
+        }
+
+        public async Task<List<string>> GenerateActorReviewsAsync(string reviewee)
+        {
+            var messages = new List<ChatMessage>
+            {
+                new SystemChatMessage("You are a movie reviewer. Write 20 short reviews for the given actor, and give each a star rating out of 5. Please separate each review with '###' so they can be easily parsed."),
+                new UserChatMessage($"The actor's name is '{reviewee}'. Please write reviews for this actor.")
+            };
+
+
+            var options = new ChatCompletionOptions
+            {
+                Temperature = (float)0.7,
+                //MaxOutputTokenCount = 100
+            };
+
+            try
+            {
+                List<string> reviews = new List<string>();
+
+                // Make the API request for chat completion
+                ChatCompletion completion = await _chatClient.CompleteChatAsync(messages, options);
+
+                if (completion.Content != null)
+                {
+                    // Assuming completion.Content contains the full response as text
+                    string fullResponse = completion.Content.First().Text;
+
+                    // Split the response based on the '###' separator
+                    var reviewArray = fullResponse.Split(new[] { "###" }, StringSplitOptions.RemoveEmptyEntries);
+
+                    // Add each split review to the reviews list
+                    for (int i = 0; i < reviewArray.Length; i++)
                     {
                         reviews.Add(reviewArray[i].Trim());  // Trim any extra whitespace
                     }

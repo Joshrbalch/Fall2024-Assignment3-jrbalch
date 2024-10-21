@@ -7,15 +7,19 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Fall2024_Assignment3_jrbalch.Data;
 using Fall2024_Assignment3_jrbalch.Models;
+using Fall2024_Assignment3_jrbalch.Data.Migrations;
+using Fall2024_Assignment3_jrbalch.Services;
 
 namespace Fall2024_Assignment3_jrbalch.Controllers
 {
     public class ActorsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly OpenAIService _openAIService;
 
-        public ActorsController(ApplicationDbContext context)
+        public ActorsController(ApplicationDbContext context, OpenAIService openAIService)
         {
+            _openAIService = openAIService;
             _context = context;
         }
 
@@ -44,9 +48,12 @@ namespace Fall2024_Assignment3_jrbalch.Controllers
                 .Include(cs => cs.Movie)
                 .Where(cs => cs.ActorId == actor.Id)
                 .Select(cs => cs.Movie)
-                .ToListAsync();
+            .ToListAsync();
 
-            var vm = new ActorMoviesViewModel(actor, movies);
+            List<string> reviews = new List<string>();
+            reviews = await _openAIService.GenerateActorReviewsAsync(actor.Name);
+
+            ActorDetailsViewModel vm = new ActorDetailsViewModel(actor, movies, reviews);
 
             return View(vm);
         }

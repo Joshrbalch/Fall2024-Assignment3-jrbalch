@@ -1,14 +1,16 @@
 ﻿namespace Fall2024_Assignment3_jrbalch.Models
 {
-    public class ActorMoviesViewModel
+    public class ActorDetailsViewModel
     {
         public Actor Actor { get; set; }
         public IEnumerable<Movie> Movies { get; set; }
+        public List<string> Reviews { get; set; }
 
-        public ActorMoviesViewModel(Actor actor, IEnumerable<Movie> movies)
+        public ActorDetailsViewModel(Actor actor, IEnumerable<Movie> movies, List<string> reviews)
         {
             Actor = actor;
             Movies = movies;
+            Reviews = reviews;
         }
     }
 }

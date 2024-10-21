@@ -7,7 +7,8 @@ namespace Fall2024_Assignment3_jrbalch.Models
     {
         [Key]
         public int ID { get; set; }
-        public string? Title { get; set; }
+        [Required]
+        public string Title { get; set; }
         public string? IMDBLink { get; set; }
         public string? Genre { get; set; }
         public int? Year { get; set; }

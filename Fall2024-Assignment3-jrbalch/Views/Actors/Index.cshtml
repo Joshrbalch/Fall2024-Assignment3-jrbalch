@@ -1,53 +1,36 @@
 ﻿@model IEnumerable<Fall2024_Assignment3_jrbalch.Models.Actor>
 
+<head>
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+
 @{
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>Actors</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
 </p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Gender)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Age)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IMDBLink)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Gender)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Age)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IMDBLink)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+
+<div class="actor-grid">
+    @foreach (var actor in Model)
+    {
+        <div class="actor-item">
+            <!-- Link wrapping the poster -->
+            <a asp-action="Details" asp-route-id="@actor.Id">
+                <!-- Display movie title above the poster -->
+                <h3>@actor.Name</h3>
+                <!-- Display the poster, assuming it's a file path -->
+                @if (actor.Photo != null)
+                {
+                    var base64 = Convert.ToBase64String(actor.Photo);
+                    var imgSrc = $"data:image/jpeg;base64,{base64}"; // Assuming the poster is a jpeg
+                    <img src="@imgSrc" height="200" width="150" />
+                }
+
+            </a>
+        </div>
+    }
+</div>

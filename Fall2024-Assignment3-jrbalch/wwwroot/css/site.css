@@ -30,18 +30,18 @@ body {
     background-color: forestgreen;
 }
 
-.movie-grid {
+.movie-grid, .actor-grid {
     display: flex;
     flex-wrap: wrap;
     gap: 20px;
 }
 
-.movie-item {
+.movie-item, .actor-item {
     text-align: center;
     margin: 10px;
 }
 
-.movie-item img {
+.movie-item img, .actor-item img {
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
