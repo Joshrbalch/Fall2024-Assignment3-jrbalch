@@ -8,13 +8,23 @@ html {
   }
 }
 
-/*#homePage {
-    background-image: url('../jungle.jpg');
-    background-size: cover;
-    background-position: center;*/
-/*    background-repeat: no-repeat;*/
-    /*height: 100vh;*/ /* Adjust height as needed */
-/*}*/
+#homePage img {
+    width: 100%;
+    height: auto;
+    max-width: 500px;
+}
+
+@media (min-width: 768px) {
+    #homePage img {
+        max-width: 800px;
+    }
+}
+
+@media (min-width: 767px) {
+    #homePage img {
+        max-width: 100%;
+    }
+}
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
   box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;

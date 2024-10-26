@@ -156,6 +156,7 @@ namespace Fall2024_Assignment3_jrbalch.Controllers
         // POST: Movies/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // POST: Movies/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("ID,Title,IMDBLink,Genre,Year,Actors,Poster")] Movie movie)
@@ -165,10 +166,18 @@ namespace Fall2024_Assignment3_jrbalch.Controllers
                 return NotFound();
             }
 
+            var poster = Request.Form.Files["Poster"]; // Get the uploaded file
             if (ModelState.IsValid)
             {
                 try
                 {
+                    if (poster != null && poster.Length > 0) // Check if a new poster was uploaded
+                    {
+                        using var memoryStream = new MemoryStream();
+                        await poster.CopyToAsync(memoryStream);
+                        movie.Poster = memoryStream.ToArray(); // Update the poster
+                    }
+
                     _context.Update(movie);
                     await _context.SaveChangesAsync();
                 }

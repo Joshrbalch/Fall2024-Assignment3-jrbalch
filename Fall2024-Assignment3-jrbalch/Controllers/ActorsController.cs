@@ -127,10 +127,25 @@ namespace Fall2024_Assignment3_jrbalch.Controllers
                 return NotFound();
             }
 
+            var photo = Request.Form.Files["Photo"]; // Get the uploaded photo
+
             if (ModelState.IsValid)
             {
                 try
                 {
+                    if (photo != null && photo.Length > 0) // Check if a new photo was uploaded
+                    {
+                        using var memoryStream = new MemoryStream();
+                        await photo.CopyToAsync(memoryStream);
+                        actor.Photo = memoryStream.ToArray(); // Update the photo
+                    }
+                    else
+                    {
+                        // If no new photo, fetch the existing actor to retain the current photo
+                        var existingActor = await _context.Actor.AsNoTracking().FirstOrDefaultAsync(m => m.Id == id);
+                        actor.Photo = existingActor.Photo; // Retain the existing photo
+                    }
+
                     _context.Update(actor);
                     await _context.SaveChangesAsync();
                 }
