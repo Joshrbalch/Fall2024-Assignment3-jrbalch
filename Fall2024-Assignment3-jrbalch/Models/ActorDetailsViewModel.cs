@@ -4,13 +4,15 @@
     {
         public Actor Actor { get; set; }
         public IEnumerable<Movie> Movies { get; set; }
-        public List<string> Reviews { get; set; }
+        public List<ReviewsViewModel> Reviews { get; set; }
+        public string? OverallSentiment { get; set; }
 
-        public ActorDetailsViewModel(Actor actor, IEnumerable<Movie> movies, List<string> reviews)
+        public ActorDetailsViewModel(Actor actor, IEnumerable<Movie> movies, List<ReviewsViewModel> reviews, string overallSentiment)
         {
             Actor = actor;
             Movies = movies;
             Reviews = reviews;
+            OverallSentiment = overallSentiment;
         }
     }
 }

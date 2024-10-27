@@ -48,11 +48,6 @@
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.Actor.Id">Edit</a> |
-    <a asp-action="Delete" asp-route-id="@Model?.Actor.Id">Delete</a> |
-    <a asp-action="Index">Back to List</a>
-</div>
-<div>
     <h5>Movies</h5>
     <table class="table">
         <thead>
@@ -82,24 +77,29 @@
 </div>
 
 <!-- Reviews Section -->
-@if (Model.Reviews != null && Model.Reviews.Count > 0)
-{
-    <div>
-        <h4>Reviews</h4>
-        <hr />
-        <ul>
-            @for (int i = 0; i < Math.Min(20, Model.Reviews.Count); i++)
-            {
-                <li>
-                    <strong>@Model.Reviews[i]:</strong> <br />
-                </li>
-            }
-        </ul>
-    </div>
-}
-else
-{
-    <div>
-        <p>No reviews available for this movie.</p>
-    </div>
-}
+<h2>Reviews and Sentiment Analysis</h2>
+<h3>Overall Sentiment: @Model.OverallSentiment</h3>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Review</th>
+            <th>Sentiment</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var review in Model.Reviews)
+        {
+            <tr>
+                <td>@review.Review</td>
+                <td>@review.Sentiment</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.Actor.Id">Edit</a> |
+    <a asp-action="Delete" asp-route-id="@Model?.Actor.Id">Delete</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

@@ -9,6 +9,7 @@ using Fall2024_Assignment3_jrbalch.Data;
 using Fall2024_Assignment3_jrbalch.Models;
 using Fall2024_Assignment3_jrbalch.Data.Migrations;
 using Fall2024_Assignment3_jrbalch.Services;
+using VaderSharp2;
 
 namespace Fall2024_Assignment3_jrbalch.Controllers
 {
@@ -53,7 +54,42 @@ namespace Fall2024_Assignment3_jrbalch.Controllers
             List<string> reviews = new List<string>();
             reviews = await _openAIService.GenerateActorReviewsAsync(actor.Name);
 
-            ActorDetailsViewModel vm = new ActorDetailsViewModel(actor, movies, reviews);
+            SentimentIntensityAnalyzer analyzer = new SentimentIntensityAnalyzer();
+            List<ReviewsViewModel> reviewsViewModels = new List<ReviewsViewModel>();
+
+            int positiveCount = 0;
+            int negativeCount = 0;
+
+            foreach (var review in reviews)
+            {
+                var sentimentResult = analyzer.PolarityScores(review);
+                string sentiment;
+
+                if (sentimentResult.Compound >= 0.05)
+                {
+                    sentiment = "Positive";
+                    positiveCount++;
+                }
+                else if (sentimentResult.Compound <= -0.05)
+                {
+                    sentiment = "Negative";
+                    negativeCount++;
+                }
+                else
+                {
+                    sentiment = "Neutral";
+                }
+
+                reviewsViewModels.Add(new ReviewsViewModel
+                {
+                    Review = review,
+                    Sentiment = sentiment
+                });
+            }
+
+            string overallSentiment = positiveCount > negativeCount ? "Positive" : "Negative";
+
+            ActorDetailsViewModel vm = new ActorDetailsViewModel(actor, movies, reviewsViewModels, overallSentiment);
 
             return View(vm);
         }

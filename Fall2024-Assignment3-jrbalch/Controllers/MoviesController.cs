@@ -57,7 +57,7 @@ namespace Fall2024_Assignment3_jrbalch.Controllers
 
             SentimentIntensityAnalyzer analyzer = new SentimentIntensityAnalyzer();
 
-            List<MovieReviewsViewModel> reviewViewModels = new List<MovieReviewsViewModel>();
+            List<ReviewsViewModel> reviewViewModels = new List<ReviewsViewModel>();
 
             int positiveCount = 0;
             int negativeCount = 0;
@@ -82,7 +82,7 @@ namespace Fall2024_Assignment3_jrbalch.Controllers
                     sentiment = "Neutral";
                 }
 
-                reviewViewModels.Add(new MovieReviewsViewModel
+                reviewViewModels.Add(new ReviewsViewModel
                 {
                     Review = review,
                     Sentiment = sentiment
